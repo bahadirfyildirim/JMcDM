@@ -9,6 +9,10 @@ include("playground.jl")
     @test euclidean([0.0, 0.0, 0.0]) == 0.0
     @test euclidean([0.0, 0.0, 1.0]) == 1.0
     @test euclidean([0.0, 0.0, 1.0], [0.0, 0.0, 2.0]) == 1.0
+    @test euclidean([0, 0, 0]) == 0.0
+    @test euclidean([0, 0, 0, 0], [1, 0, 0, 0]) == 1.0
+    @test euclidean([0, 0, 0, 0], [1, 0, 0, 0]) isa Float64
+    @test euclidean([0, 0, 0, 0], [1.0, 0, 0, 0]) isa Float64
 end
 
 @testset "Normalization" begin
@@ -19,6 +23,13 @@ end
     @test isapprox(nz[3], 0.7745967, atol=tol)
     @test isapprox(nz[4], -0.2581989, atol=tol)
     @test isapprox(nz[5], 0.0000000, atol=tol)
+
+    nzint = normalize([1, 2, 3, -1, 0])
+    @test isapprox(nzint[1], 0.2581989, atol=tol)
+    @test isapprox(nzint[2], 0.5163978, atol=tol)
+    @test isapprox(nzint[3], 0.7745967, atol=tol)
+    @test isapprox(nzint[4], -0.2581989, atol=tol)
+    @test isapprox(nzint[5], 0.0000000, atol=tol)
 end
 
 @testset "Column min and max vectors" begin
@@ -33,6 +44,18 @@ end
     x = [1.0, 2.0, 3.0, 4.0, 5.0]
     result = x |> unitize |> sum
     @test result == 1.0
+
+    x = [1, 2, 3, 4, 5]
+    result = x |> unitize |> sum 
+    @test result == 1.0
+
+    x = [1, 1, 1, 1, 1]
+    result = x |> unitize 
+    @test result == [0.20, 0.20, 0.20, 0.20, 0.20]
+
+    x = [0.20, 0.20, 0.20, 0.20, 0.20]
+    result = x |> unitize 
+    @test result == [0.20, 0.20, 0.20, 0.20, 0.20]
 end
 
 @testset "Product weights with DataFrame" begin
@@ -41,7 +64,14 @@ end
     df[:, :y] = [10.0, 20.0, 30.0, 40.0]
     w = [0.60, 0.40]
     result = w * df 
+    @test result[:, :x] == [0.6, 1.2, 2.4, 4.8]
+    @test result[:, :y] == [4.0, 8.0, 12.0, 16.0]
 
+    dfint = DataFrame()
+    dfint[:, :x] = [1, 2, 4, 8]
+    dfint[:, :y] = [10, 20, 30, 40]
+    w = [0.60, 0.40]
+    result = w * dfint 
     @test result[:, :x] == [0.6, 1.2, 2.4, 4.8]
     @test result[:, :y] == [4.0, 8.0, 12.0, 16.0]
 end
@@ -52,6 +82,22 @@ end
 
     @test isa(df, DataFrame)
     @test size(df) == (5, 10)
+    @test df[:, 1] isa Array{Float64,1}
+    @test df[:, 2] isa Array{Float64,1}
+    @test df[:, 3] isa Array{Float64,1}
+    @test df[:, 4] isa Array{Float64,1}
+    @test df[:, 5] isa Array{Float64,1}
+
+    @test names(df)[1] == "Crt1"
+    @test names(df)[2] == "Crt2"
+
+    m = rand(3, 5)
+    dfwithnames = makeDecisionMatrix(m, names=["A1", "B", "CD", "EE", "FG"])
+    @test names(dfwithnames)[1] == "A1"
+    @test names(dfwithnames)[2] == "B"
+    @test names(dfwithnames)[3] == "CD"
+    @test names(dfwithnames)[4] == "EE"
+    @test names(dfwithnames)[5] == "FG"
 end
 
 @testset "TOPSIS" begin
@@ -1008,3 +1054,46 @@ end
     
 end
 
+@testset "Entropy" begin
+    tol = 0.0001
+    df = DataFrame(
+                    C1 = [2, 4, 3, 5, 4, 3],
+                    C2 = [1, 1, 2, 1, 2, 2],
+                    C3 = [4, 5, 6, 5, 5, 6],
+                    C4 = [7, 6, 6, 7, 6, 6],
+                    C5 = [6, 7, 5, 6, 7, 6],
+                    C6 = [6, 7, 6, 7, 7, 6],
+                    C7 = [7, 6, 8, 7, 6, 6],
+                    C8 = [3000, 3500, 4000, 3000, 3000, 3500]
+    )
+
+    result = entropy(df)
+
+    @test result isa EntropyResult
+
+    @test isapprox(result.w, [0.29967360960, 0.44136733892, 0.07009088720, 0.02123823711, 0.04902292895, 0.02308037885, 0.04776330969, 0.04776330969], atol=tol)
+    
+end
+
+@testset "CODAS" begin
+    tol = 0.0001
+    decmat =[60.000 0.400 2540 500 990
+    6.350 0.150 1016 3000 1041
+    6.800 0.100 1727.2 1500 1676
+    10.000 0.200 1000 2000 965
+    2.500 0.100 560 500 915
+    4.500 0.080 1016 350 508
+    3.000 0.100 1778 1000 920]
+
+    df = makeDecisionMatrix(decmat)
+
+    w  = [0.036, 0.192, 0.326, 0.326, 0.12];
+    fns = [maximum, minimum, maximum, maximum, maximum];
+
+    result = codas(df, w, fns)
+
+    @test result isa CODASResult
+
+    @test isapprox(result.scores, [0.512176491, 1.463300035, 1.07153259, -0.212467998, -1.851520552, -1.17167677, 0.188656204], atol=tol)
+    
+end

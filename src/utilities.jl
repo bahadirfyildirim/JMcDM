@@ -1,13 +1,13 @@
-function euclidean(v1::Array{T,1}, v2::Array{T,1})::T where T <: Number 
+function euclidean(v1::Array{T1,1}, v2::Array{T2,1})::Float64 where {T1 <: Number,T2 <: Number} 
     (v1 .- v2).^2.0 |> sum |> sqrt
 end
 
-function euclidean(v1::Array{T,1})::T where T <: Number
-    v2 = zeros(T, length(v1))
+function euclidean(v1::Array{T,1})::Float64 where T <: Number
+    v2 = zeros(Float64, length(v1))
     return euclidean(v1, v2)
 end
 
-function normalize(v1::Array{T,1})::Array{T,1} where T <: Number
+function normalize(v1::Array{T,1})::Array{Float64,1} where T <: Number
     return v1 ./ euclidean(v1) 
 end
 
@@ -65,14 +65,15 @@ function rowmeans(data)::Array{Float64,1}
     return apply_rows(mean, data)
 end
 
-function unitize(v::Array{Float64,1})::Array{Float64,1}
+function unitize(v::Array{T,1})::Array{Float64,1} where {T <: Number}
     return v ./ sum(v)
 end
 
-function Base.:*(w::Array{T,1}, data::DataFrame)::DataFrame where {T <: Number}
-    newdf = similar(data)
+function Base.:*(w::Array{Float64,1}, data::DataFrame)::DataFrame 
+    newdf = copy(data)
     _, p = size(newdf)
     for i in 1:p
+        newdf[!, i] = convert.(Float64, newdf[!,i])
         newdf[:, i] = w[i] .* data[:, i]
     end
     return newdf
@@ -94,11 +95,15 @@ function Base.:-(r1::DataFrameRow, r2::Array{T,1})::Array{T,1} where T <: Number
     return v1 .- r2
 end
 
-function makeDecisionMatrix(mat::Array{T,2} where T <: Number)::DataFrame
+function makeDecisionMatrix(mat::Array{T,2}; names::Union{Nothing,Array{String,1}}=nothing)::DataFrame where {T <: Number}
     _, m = size(mat)
     df = DataFrame()
     for i in 1:m
-        name = string("Crt", i)
+        if names isa Nothing
+            name = string("Crt", i)
+        else
+            name = names[i]
+        end
         df[:,Symbol(name)] = convert(Array{Float64,1}, mat[:, i])     
     end
     return df

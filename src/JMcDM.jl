@@ -34,6 +34,8 @@ include("copras.jl")
 include("promethee.jl")
 include("cocoso.jl")
 include("critic.jl")
+include("entropy.jl")
+include("codas.jl")
 
 
 include("summary.jl")
@@ -61,6 +63,8 @@ export COPRASResult
 export PrometheeResult
 export CoCoSoResult
 export CRITICResult
+export EntropyResult
+export CODASResult
 
 # export game type
 export GameResult
@@ -110,6 +114,8 @@ export copras
 export promethee, prometLinear, prometVShape, prometUsual, prometQuasi, prometLevel
 export cocoso
 export critic
+export entropy
+export codas
 
 #  export SCDM tools
 export laplace
