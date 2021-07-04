@@ -1,10 +1,10 @@
 """
-        grey(decisionMat, weights, fs, zeta)
+        grey(decisionMat, weights, fs; zeta)
 
     Perform GRA (Grey Relational Analysis) for a given decision matrix and weights.
 
 # Arguments:
- - `decisionMat::Array{Float,2}`: n × m matrix of decision matrix. 
+ - `decisionMat::DataFrame`: n × m matrix of decision matrix in type of DataFrame. 
  - `weights::Array{Float64, 1}`: m-vector of weights for criteria.
  - `fs::Array{Function, 1}`: m-vector of functions that are either maximize or minimize for each single criterion.
  - `zeta::Float64`: zeta parameter for the algorithm. The default is 0.5.
@@ -61,9 +61,10 @@ julia> result.bestIndex
 Çözümünde Çok Kriterli Karar verme Yöntemleri, Editörler: Bahadır Fatih Yıldırım ve Emrah Önder,
 Dora, 2. Basım, 2015, ISBN: 978-605-9929-44-8
 """
-function grey(decisionMat::DataFrame, weights::Array{Float64,1}, fs::Array{Function,1}, zeta::Float64=0.5)::GreyResult
+function grey(decisionMat::DataFrame, weights::Array{Float64,1}, fs::Array{Function,1}; zeta::Float64=0.5)::GreyResult
 
-    mat = convert(Matrix, decisionMat)
+    #mat = convert(Matrix, decisionMat)
+    mat = Matrix(decisionMat)
 
     nrows, ncols = size(mat)
 
@@ -131,3 +132,13 @@ function grey(decisionMat::DataFrame, weights::Array{Float64,1}, fs::Array{Funct
     
     return result
 end
+
+
+
+function grey(setting::MCDMSetting; zeta::Float64=0.5)::GreyResult
+    grey(
+        setting.df,
+        setting.weights,
+        setting.fns
+    )
+end 

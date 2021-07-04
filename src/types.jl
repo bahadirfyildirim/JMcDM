@@ -1,5 +1,45 @@
 abstract type MCDMResult end 
 abstract type SCDMResult end
+abstract type MCDMMethod end 
+
+
+"""
+    struct MCDMSetting 
+        df::DataFrame
+        weights::Array{Float64, 1}
+        fns::Array{Function, 1}
+    end
+
+    Immutable data structure for a MCDM setting.
+
+# Arguments
+- `df::DataFrame`: The decision matrix in type of DataFrame.
+- `weights::Array{Float64,1}`: Array of weights for each criterion.
+- `fns::Array{Function, 1}`: Array of functions. The elements are either minimum or maximum.
+
+# Examples
+```julia-repl
+julia> df = DataFrame();
+julia> df[:, :x] = Float64[9, 8, 7];
+julia> df[:, :y] = Float64[7, 7, 8];
+julia> df[:, :z] = Float64[6, 9, 6];
+julia> df[:, :q] = Float64[7, 6, 6];
+
+julia> w = Float64[4, 2, 6, 8];
+
+julia> fns = makeminmax([maximum, maximum, maximum, maximum]);
+
+julia> setting = MCDMSetting(df, w, fns)
+
+julia> result = topsis(setting);
+julia> # Same result can be obtained using
+julia> result2 = mcdm(setting, TopsisMethod())
+"""
+struct MCDMSetting 
+    df::DataFrame
+    weights::Array{Float64, 1}
+    fns::Array{Function, 1}
+end
 
 struct TopsisResult <: MCDMResult
     decisionMatrix::DataFrame
@@ -268,3 +308,86 @@ struct CODASResult <: MCDMResult
     bestIndex::Int64
 end
 
+struct TopsisMethod <: MCDMMethod end
+
+struct ElectreMethod <: MCDMMethod 
+end 
+
+
+struct ArasMethod <: MCDMMethod 
+end 
+
+
+struct CocosoMethod <: MCDMMethod
+    lambda::Float64
+end
+
+CocosoMethod()::CocosoMethod = CocosoMethod(0.5)
+
+struct CodasMethod <: MCDMMethod
+    tau::Float64
+end
+
+CodasMethod()::CodasMethod = CodasMethod(0.02)
+
+struct CoprasMethod <: MCDMMethod 
+end 
+
+
+struct CriticMethod <: MCDMMethod 
+end 
+
+
+struct EdasMethod <: MCDMMethod 
+end 
+
+
+struct GreyMethod <: MCDMMethod 
+    zeta::Float64
+end 
+
+GreyMethod() :: GreyMethod = GreyMethod(0.5)
+
+struct MabacMethod <: MCDMMethod 
+end 
+
+
+struct MaircaMethod <: MCDMMethod 
+end 
+
+
+struct MooraMethod <: MCDMMethod 
+end 
+
+
+struct PrometheeMethod <: MCDMMethod 
+    pref::Array{Function, 1}
+    qs::Array{Union{Nothing, Float64}, 1}
+    ps::Array{Union{Nothing, Float64}, 1}
+end 
+
+PrometheeMethod(pref::Array{Function, 1}, qs::Array{Float64,1}, ps::Array{Float64, 1}) :: PrometheeMethod = PrometheeMethod(pref, qs, ps)
+
+struct SawMethod <: MCDMMethod 
+end 
+
+
+struct VikorMethod <: MCDMMethod
+    v::Float64
+end 
+
+VikorMethod()::VikorMethod = VikorMethod(0.5)
+
+
+struct WaspasMethod <: MCDMMethod
+    lambda::Float64
+end
+
+WaspasMethod() :: WaspasMethod = WaspasMethod(0.5)
+
+struct WPMMethod <: MCDMMethod
+end 
+
+
+struct MarcosMethod <: MCDMMethod
+end

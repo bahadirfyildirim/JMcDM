@@ -18,6 +18,8 @@ using Statistics
 
 
 include("../types.jl")
+include("../mcdm.jl")
+include("../print.jl")
 include("../utilities.jl")
 include("../topsis.jl")
 include("../vikor.jl")

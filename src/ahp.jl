@@ -41,8 +41,9 @@ end
 
 """
     ahp_consistency(comparisonMatrix)
-Test if a comparison matrix whether consistent or not.
-# Arguments:
+    Test if a comparison matrix whether consistent or not.
+ 
+ # Arguments:
  - `comparisonMatrix::DataFrame`: Comparison matrix for AHP. 
  
  # Description 
@@ -77,7 +78,7 @@ julia> K
  1.0       8.0  1.0    0.333333  5.0   3.0       1.0       1.0
 
 julia> dmat = makeDecisionMatrix(K);
-julia> julia> ahp_consistency(dmat).isConsistent
+julia> ahp_consistency(dmat).isConsistent
 true
 ```
 
@@ -98,7 +99,8 @@ function ahp_consistency(comparisonMatrix::DataFrame)::AHPConsistencyResult
     end
 
     priority_vector = rowmeans(normalizedComparisonMatrix)
-    mcomparisonMatrix = convert(Array{Float64,2}, comparisonMatrix)
+    #mcomparisonMatrix = convert(Array{Float64,2}, comparisonMatrix)
+    mcomparisonMatrix = Matrix{Float64}(comparisonMatrix)
 
     consistency_vector = mcomparisonMatrix * priority_vector
 

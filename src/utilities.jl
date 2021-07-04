@@ -80,13 +80,16 @@ function Base.:*(w::Array{Float64,1}, data::DataFrame)::DataFrame
 end
 
 function Base.:-(r1::DataFrameRow, r2::DataFrameRow)::Array{Number,1}
-    v1 = convert(Array{Float64,1}, r1)
-    v2 = convert(Array{Float64,1}, r2)
+    # v1 = convert(Array{Float64,1}, r1)
+    v1 = Vector{Float64}(r1)
+    # v2 = convert(Array{Float64,1}, r2)
+    v2 = Vector{Float64}(r2)
     return v1 .- v2
 end
 
 function Base.:-(r1::Array{T,1}, r2::DataFrameRow)::Array{T,1} where T <: Number
-    v2 = convert(Array{Float64,1}, r2)
+    # v2 = convert(Array{Float64,1}, r2)
+    v2 = Vector{Float64}(r2)
     return r1 .- v2
 end
 
@@ -95,6 +98,16 @@ function Base.:-(r1::DataFrameRow, r2::Array{T,1})::Array{T,1} where T <: Number
     return v1 .- r2
 end
 
+"""
+    makeDecisionMatrix(mat; names)
+
+    Create a DataFrame using a decision matrix optionally using column names.
+
+# Arguments:
+ - `mat::Array{T,2}`: Matrix of numbers in any set
+ - `names::Union{Nothing,Array{String,1}}`: Column names. Default is nothing. If column names are not given, they are labelled as Crt 1, Crt 2, ..., etc.
+ 
+"""
 function makeDecisionMatrix(mat::Array{T,2}; names::Union{Nothing,Array{String,1}}=nothing)::DataFrame where {T <: Number}
     _, m = size(mat)
     df = DataFrame()
@@ -110,7 +123,7 @@ function makeDecisionMatrix(mat::Array{T,2}; names::Union{Nothing,Array{String,1
 end
 
 function Base.minimum(df::DataFrame)
-    df |> x -> convert(Matrix, x) |> minimum
+    df |> Matrix |> minimum
 end
 
 function reverseminmax(fns::Array{Function,1})::Array{Function,1}

@@ -11,6 +11,9 @@ for a given matrix and weights.
 
 # Description 
 electre() applies the ELECTRE method to rank n strategies subject to m criteria which are supposed to be either maximized or minimized.
+C and D values are used to determine the best strategy. If the strategy with the highest C value 
+is same as the strategy with the lowest D value than the solution is unique. Otherwise, two strategies 
+are reported as the solution. 
 
 # Output 
 - `::ElectreResult`: TopsisResult object that holds multiple outputs including scores and best index.
@@ -162,3 +165,11 @@ function electre(decisionMat::DataFrame, weights::Array{Float64,1}, fns::Array{F
 
     return result
 end
+
+function electre(setting::MCDMSetting)::ElectreResult
+    electre(
+        setting.df,
+        setting.weights,
+        setting.fns
+    )
+end 

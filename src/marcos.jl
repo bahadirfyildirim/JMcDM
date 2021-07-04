@@ -64,8 +64,9 @@ Puška, A., Stojanović, I., Maksimović, A., & Osmanović, N. (2020). Evaluatio
 """
 function marcos(decisionMat::DataFrame, weights::Array{Float64,1}, fns::Array{Function,1})::MARCOSResult
 
-    df = convert(Matrix, decisionMat)
-
+    # df = convert(Matrix, decisionMat)
+    df = Matrix(decisionMat)
+    
     row, col = size(df)
 
     w = unitize(weights)
@@ -123,3 +124,12 @@ function marcos(decisionMat::DataFrame, weights::Array{Float64,1}, fns::Array{Fu
 
     return result
 end
+
+
+function marcos(setting::MCDMSetting)::MARCOSResult
+    marcos(
+        setting.df,
+        setting.weights,
+        setting.fns
+    )
+end 

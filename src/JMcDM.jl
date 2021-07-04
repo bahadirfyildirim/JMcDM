@@ -37,9 +37,33 @@ include("critic.jl")
 include("entropy.jl")
 include("codas.jl")
 
-
 include("summary.jl")
 
+include("mcdm.jl")
+include("print.jl")
+
+# export MCDM methods
+export MCDMMethod 
+export ArasMethod
+export CocosoMethod
+export CodasMethod
+export CoprasMethod
+export CriticMethod
+export EdasMethod
+export ElectreMethod
+export GreyMethod
+export MabacMethod
+export MaircaMethod
+export MooraMethod
+export PrometheeMethod
+export SawMethod
+export TopsisMethod
+export VikorMethod
+export WPMMethod
+export WaspasMethod
+export MarcosMethod
+
+export MCDMSetting
 
 # export MCDM types
 export MCDMResult
@@ -94,15 +118,15 @@ export reverseminmax
 export makeminmax
 
 #  export MCDM tools
-export topsis 
+export topsis
 export vikor
 export electre
-export moora 
+export moora
 export dematel
 export ahp_RI, ahp_consistency, ahp
 export nds
 export grey
-export saw 
+export saw
 export aras
 export wpm
 export waspas
@@ -136,5 +160,6 @@ export dataenvelop
 
 #  export summary function
 export summary
+export mcdm
 
 end # module

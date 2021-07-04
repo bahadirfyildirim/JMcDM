@@ -79,8 +79,9 @@ Ulutaş, A. (2017). EDAS Yöntemi Kullanılarak Bir Tekstil Atölyesi İçin Dik
 """
 function edas(decisionMat::DataFrame, weights::Array{Float64,1}, fns::Array{Function,1})::EDASResult
 
-    df = convert(Matrix, decisionMat)
-
+    # df = convert(Matrix, decisionMat)
+    df = Matrix(decisionMat)
+    
     row, col = size(df)
 
     w = unitize(weights)
@@ -131,3 +132,12 @@ function edas(decisionMat::DataFrame, weights::Array{Float64,1}, fns::Array{Func
 
     return result
 end
+
+
+function edas(setting::MCDMSetting)::EDASResult
+    edas(
+        setting.df,
+        setting.weights,
+        setting.fns
+    )
+end 

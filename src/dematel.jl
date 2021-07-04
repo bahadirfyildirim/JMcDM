@@ -5,7 +5,7 @@ Apply Dematel for a given comparison matrix.
 
 
 # Arguments:
- - `comparisonMat::Array{Float,2}`: n × m matrix of input values. 
+ - `comparisonMat::DataFrame`: n × m matrix of input values in DataFrame format (for convenience). Values are either 0, 1, 2, 3, or 4 which indicate the level of importance of the ith criterion relative to the jth criterion.
  - `threshold::Union{Nothing, Float64}`: Optional threshold used in calculating values of influence matrix. It is calculated when the argument is omitted. 
 
 # Description 
@@ -59,7 +59,8 @@ function dematel(comparisonMat::DataFrame; threshold::Union{Nothing,Float64}=not
 
     largest = maximum(vcat(csums, rsums))
 
-    K = convert(Array{Float64,2}, comparisonMat)
+    # K = convert(Array{Float64,2}, comparisonMat)
+    K = Matrix{Float64}(comparisonMat)
     ND = K ./ largest
   
     T = ND * inv(I(n) - ND)
