@@ -5,7 +5,6 @@
 JMcDM.MCDMSetting
 ```
 
-
 ## mcdm
 ```@docs
 JMcDM.mcdm
