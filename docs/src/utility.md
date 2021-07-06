@@ -1,5 +1,11 @@
 # Utility functions
 
+## MCDMSetting
+```@docs
+JMcDM.MCDMSetting
+```
+
+
 ## mcdm
 ```@docs
 JMcDM.mcdm
