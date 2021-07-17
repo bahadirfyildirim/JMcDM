@@ -5,14 +5,14 @@ A package for Multiple-criteria decision making techniques in Julia.
 
 Suppose a decision process has n alternatives and m criteria  which are either to be maximized or minimized. Each single criterion has a weight 0 <= w_i <= 1 where sum of w_i is 1. f_i is either maximum or minimum. g_j(.) is evolution function and it is taken as g_j(x) = x in many methods. A multiple criteria decision problem can be represented using the decision table 
 
-   | **Criteria**  |   C_1    |   C_2    | ...  |   C_m    |
-   | :-----------: | :--------: | :--------: | :------: | :--------: |
-   |  **Weights**  |   w_1    |    w_2     | ...      |   w_m     |
-   | **Functions** |   f_1    |    f_2     | ...      |   f_m     |
-   |     A_1     | g_1(A_1)   |  g_2(A_1)  | ...      |  g_m(S_A)  |
-   |     A_2     | g_1(A_2)   |  g_2(A_2)  | ...      |  g_m(A_2)  |
-   |       ⋮       |     ⋮     |     ⋮      | ...      |     ⋮      |
-   |     A_n     | g_1(A_n)   |  g_2(A_n)  | ...      |  g_m(A_n)  |
+   | **Criteria**  |   C_1    |   C_2    |  ...  |   C_m    |
+   | :-----------: | :------: | :------: | :---: | :------: |
+   |  **Weights**  |   w_1    |   w_2    |  ...  |   w_m    |
+   | **Functions** |   f_1    |   f_2    |  ...  |   f_m    |
+   |      A_1      | g_1(A_1) | g_2(A_1) |  ...  | g_m(S_A) |
+   |      A_2      | g_1(A_2) | g_2(A_2) |  ...  | g_m(A_2) |
+   |       ⋮       |    ⋮     |    ⋮     |  ...  |    ⋮     |
+   |      A_n      | g_1(A_n) | g_2(A_n) |  ...  | g_m(A_n) |
 
 without loss of generality. When A_1, A_2, ..., A_n are alternatives and C_1, C_2, ..., C_m are different situations of a single criterion then the decision problem is said to be single criterion decision problem. If A_i and C_j are strategies of two game players then g_j(A_i) is the gain of the row player when she selects the strategy *i* and the column player selects the strategy C_j. 
 
@@ -40,6 +40,18 @@ julia> Pkg.add("JMcDM")
 ```
 
 in Julia REPL.
+
+
+## Package Dependencies
+
+Since the Julia package manager installs all of the dependencies automatically, user don't need to
+install them manually. The package dependencies are listed below:
+- Cbc
+- DataFrames
+- JuMP
+- LinearAlgebra
+- Statistics
+- StatsBase
 
 ## Documentation
 
@@ -106,7 +118,7 @@ Please check out the reference manual [here](https://jbytecode.github.io/JMcDM/d
 ## Example
 
 ```julia
-julia> using JMcDM, DataFrames
+julia> using JMcDM
 julia> df = DataFrame(
 :age        => [6.0, 4, 12],
 :size       => [140.0, 90, 140],
@@ -163,13 +175,12 @@ julia> result = mcdm(setting, TopsisMethod())
 ```
 
 
-
 ## Community guidelines
 
 Do you want to contribute?
 
 - Please create an Issue first. In this issue, please specify the idea.
-- Let the community discuss the new contribution.
+- Let the community discuss the new contribution in our Slack channel or in the created issue.
 
 If the community decision is yes, please
 
@@ -178,5 +189,7 @@ If the community decision is yes, please
 - Send a pull request.
 
 Please read the issue [Welcome to newcomers!](https://github.com/jbytecode/JMcDM/issues/3) for implementation details.
+
+Our Slack channel is [JMcDM Slack Channel](https://julialang.slack.com/archives/C01MJ0VF1U3).
 
 Welcome!
