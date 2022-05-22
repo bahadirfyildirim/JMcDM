@@ -116,28 +116,6 @@ JMcDM.codas
 ```
 
 
-## SD
-```@docs
-JMcDM.sd
-```
-
-
-## ROV
-```@docs
-JMcDM.rov
-```
-
-
-## COPELAND
-```@docs
-JMcDM.copeland
-```
-
-
-## PSI
-```@docs
-JMcDM.psi
-```
 
 
 

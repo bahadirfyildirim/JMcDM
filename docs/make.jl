@@ -1,10 +1,10 @@
 using Documenter
 
 using Pkg
-#Pkg.activate("../")
+Pkg.activate("../")
 using JMcDM
 
-#push!(LOAD_PATH,"../src/")
+push!(LOAD_PATH,"../src/")
 makedocs(
 	sitename="JMcDM",
 	pages=[
