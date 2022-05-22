@@ -133,8 +133,19 @@ JMcDM.rov
 JMcDM.copeland
 ```
 
+## SD
+```@docs
+JMcDM.sd
+```
 
-
+## ROV
+```@docs
+JMcDM.rov
+```
+## PSI
+```@docs
+JMcDM.psi
+```
 
 
 
