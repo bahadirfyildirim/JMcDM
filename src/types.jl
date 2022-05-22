@@ -50,6 +50,12 @@ struct MCDMSetting
     fns::Array{Function, 1}
 end
 
+struct PSIResult <: MCDMResult
+    scores::Array{Float64,1}
+    rankings::Array{Int, 1}
+    bestIndex::Int
+end
+
 struct TopsisResult <: MCDMResult
     decisionMatrix::DataFrame
     weights::Array{Float64,1}
@@ -83,10 +89,11 @@ end
 
 
 struct MooraResult <: MCDMResult
+    mooraType::Symbol
     decisionMatrix::DataFrame
     weights::Array{Float64,1}
     weightedDecisionMatrix::DataFrame
-    referenceMatrix::DataFrame
+    referenceMatrix::Union{DataFrame, Nothing}
     scores::Array{Float64,1}
     bestIndex::Int64
 end
@@ -317,6 +324,18 @@ struct CODASResult <: MCDMResult
     bestIndex::Int64
 end
 
+struct SDResult <: MCDMResult
+    weights::Array{Float64, 1}
+end
+
+struct ROVResult 
+    uminus::Array{Float64, 1}
+    uplus::Array{Float64, 1}
+    scores::Array{Float64, 1}
+    ranks::Array{Float64, 1}
+end
+
+
 struct TopsisMethod <: MCDMMethod end
 
 struct ElectreMethod <: MCDMMethod 
@@ -364,10 +383,15 @@ end
 struct MaircaMethod <: MCDMMethod 
 end 
 
+struct PSIMethod <: MCDMMethod
+end
+
 
 struct MooraMethod <: MCDMMethod 
+    method::Symbol
 end 
 
+MooraMethod() :: MooraMethod = MooraMethod(:reference)
 
 struct PrometheeMethod <: MCDMMethod 
     pref::Array{Function, 1}
@@ -399,4 +423,7 @@ end
 
 
 struct MarcosMethod <: MCDMMethod
+end
+
+struct ROVMethod <: MCDMMethod
 end

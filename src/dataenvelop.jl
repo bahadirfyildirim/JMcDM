@@ -62,9 +62,8 @@ function dataenvelop(input::Array{Float64,2}, output::Array{Float64,1}; verbose:
     
     for objectnum in 1:nrow
 
-        model = Model(Cbc.Optimizer);
+        model = Model(GLPK.Optimizer);
         MOI.set(model, MOI.Silent(), !verbose)
-
         @variable(model, x[1:nrow])
         @variable(model, theta)
 

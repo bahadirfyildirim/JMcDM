@@ -40,10 +40,10 @@ julia> result = vikor(dmat, w, fns);
 
 julia> result.scores
 4-element Array{Float64,1}:
-  0.1975012087551764
-  0.2194064473270817
-  0.3507643203516215
- -0.16727341435277993
+  0.7489877763052237
+  0.7332093914796731
+  1.0
+  0.0
 
 julia> result.bestIndex
 4
@@ -64,6 +64,7 @@ function vikor(decisionMat::DataFrame, weights::Array{Float64,1}, fns::Array{Fun
     col_max = apply_columns(fns, decisionMat)
     col_min = apply_columns(reverseminmax(fns), decisionMat)
 
+
     A = similar(decisionMat)
 
     for i in 1:nalternatives
@@ -79,8 +80,10 @@ function vikor(decisionMat::DataFrame, weights::Array{Float64,1}, fns::Array{Fun
         end
     end
 
+    
     weightedA = w * A
 
+    
     s = Array{Float64,1}(undef, nalternatives)
     r = similar(s)
     q = similar(s)
@@ -90,11 +93,14 @@ function vikor(decisionMat::DataFrame, weights::Array{Float64,1}, fns::Array{Fun
         r[i] = maximum(weightedA[i,:])
     end
 
+    
+
     smin = minimum(s)
     smax = maximum(s)
     rmin = minimum(r)
     rmax = maximum(r)
-    q = v .* ((s .- smin ./ (smax .- smin))) + (1 - v) .* ((r .- rmin ./ (rmax .- rmin)))
+    q = v .* (( (s .- smin) ./ (smax .- smin))) + (1 - v) .* (( (r .- rmin) ./ (rmax .- rmin)))
+
 
     scores = q
 

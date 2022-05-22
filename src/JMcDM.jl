@@ -1,12 +1,14 @@
 module JMcDM
 
-using DataFrames
-using LinearAlgebra
-using JuMP
-using Cbc
-using StatsBase
-using Statistics
+# Dependencies
+import DataFrames: DataFrame, DataFrameRow
+import JuMP: @variable, @objective, @constraint
+import JuMP: Model, MOI, optimize!, JuMP, objective_value
+import GLPK
 
+# for Pretty printing
+# of MCDM results
+import Base.show
 
 # includes 
 include("types.jl")
@@ -36,11 +38,17 @@ include("cocoso.jl")
 include("critic.jl")
 include("entropy.jl")
 include("codas.jl")
+include("psi.jl")
 
 include("summary.jl")
 
 include("mcdm.jl")
 include("print.jl")
+
+include("copeland.jl")
+include("sd.jl")
+include("rov.jl")
+
 
 # export imported functions
 export DataFrame
@@ -65,6 +73,7 @@ export VikorMethod
 export WPMMethod
 export WaspasMethod
 export MarcosMethod
+export PSIMethod
 
 export MCDMSetting
 
@@ -92,6 +101,9 @@ export CoCoSoResult
 export CRITICResult
 export EntropyResult
 export CODASResult
+export SDResult
+export ROVResult
+export PSIResult
 
 # export game type
 export GameResult
@@ -108,6 +120,7 @@ export HurwiczResult
 export MLEResult
 export ExpectedRegretResult
 export DataEnvelopResult
+
 
 
 # export utility functions
@@ -138,11 +151,14 @@ export marcos
 export mabac
 export mairca
 export copras
-export promethee, prometLinear, prometVShape, prometUsual, prometQuasi, prometLevel
+export promethee, prometLinear, prometVShape, prometUShape, prometQuasi, prometLevel
 export cocoso
 export critic
 export entropy
 export codas
+export sd
+export rov
+export psi
 
 #  export SCDM tools
 export laplace
@@ -164,5 +180,9 @@ export dataenvelop
 #  export summary function
 export summary
 export mcdm
+
+# export Copeland module
+import JMcDM.Copeland: copeland
+export copeland
 
 end # module

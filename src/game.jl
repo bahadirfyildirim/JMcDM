@@ -49,13 +49,22 @@ julia> result.value
 # References
 Zhou, Hai-Jun. "The rock–paper–scissors game." Contemporary Physics 57.2 (2016): 151-163.
 """
-    function game(decisionMatrix::DataFrame; verbose::Bool=false)::GameResult
+function game(decisionMatrix::DataFrame; verbose::Bool=false)::GameResult
     
-    newDecisionMatrix = similar(decisionMatrix)
+    return game(Matrix(decisionMatrix), verbose = verbose)
+
+end
+
+
+
+function game(decisionMatrix::Matrix{<: Real}; verbose::Bool=false)::GameResult
+    
+    newDecisionMatrix = copy(decisionMatrix)
     
     nrow, ncol = size(decisionMatrix)
 
     minmat = minimum(decisionMatrix)
+
     modified = false
 
     if minmat < 0
@@ -63,37 +72,42 @@ Zhou, Hai-Jun. "The rock–paper–scissors game." Contemporary Physics 57.2 (20
         newDecisionMatrix = decisionMatrix .- minmat    
     end
 
-    # dm = convert(Matrix, newDecisionMatrix)
-    dm = Matrix(newDecisionMatrix)
-    
-    model = Model(Cbc.Optimizer);
+    dm = newDecisionMatrix
+
+    model = Model(GLPK.Optimizer);
     MOI.set(model, MOI.Silent(), !verbose)
 
 
     @variable(model, x[1:nrow])
-    @objective(model, Min, sum(x))
+    @variable(model, g)
+    @objective(model, Max, g)
 
-    for i in 1:nrow
-        @constraint(model, sum(x[1:nrow] .* dm[:, i]) >= 1)
+    for i in 1:ncol
+        @constraint(model, sum(x[1:nrow] .* dm[:, i]) >= g)
     end
 
     for i in 1:nrow
         @constraint(model, x[i] >= 0)
     end
 
+    @constraint(model, sum(x) == 1.0)
+
+    if verbose
+        @info model 
+    end 
+    
     optimize!(model);
 
     values = JuMP.value.(x)
 
-    gamevalue = 1 / objective_value(model)
-    p = gamevalue * values
+    gamevalue = JuMP.value(g) #objective_value(model)
     
     if modified
         gamevalue -= abs(minmat)
     end
 
-result = GameResult(
-        p,
+    result = GameResult(
+        values,
         gamevalue
     )
     
