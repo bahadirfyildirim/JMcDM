@@ -115,7 +115,33 @@ JMcDM.critic
 JMcDM.codas
 ```
 
+## COPELAND
+```@docs
+JMcDM.copeland
+```
 
 
 
+## MOOSRA
+```@docs
+JMcDM.moosra
+```
 
+
+
+## PSI
+```@docs
+JMcDM.psi
+```
+
+
+## ROV
+```@docs
+JMcDM.rov
+```
+
+
+## SD
+```@docs
+JMcDM.sd
+```
